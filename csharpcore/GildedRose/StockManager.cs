@@ -28,7 +28,7 @@ namespace GildedRose
         {
             if (IsBackstagePass(item)) IncreaseQualityBackstagePass(item);
             else if (IsAgedBrie(item)) IncreaseQualityBy1(item);
-            else if (IsConjured(item)) DecreaseQualityBy2();
+            else if (IsConjured(item)) DecreaseQualityBy2(item);
             else DecreaseQualityBy1(item);
         }
 
@@ -52,8 +52,8 @@ namespace GildedRose
         
         private void DecreaseQualityBy2(Item item)
         {
-            if (item.Quality > 2 && !IsSulfuras(item)) 
-                item.Quality -= 2;
+            if (item.Quality > 2 && !IsSulfuras(item)) item.Quality -= 2;
+            else DecreaseQualityBy1(item);
         }
 
         private void UpdateSellBy(Item item)
@@ -66,6 +66,7 @@ namespace GildedRose
         {
             if (IsAgedBrie(item)) IncreaseQualityBy1(item);
             else if (IsBackstagePass(item)) item.Quality = 0;
+            else if (IsConjured(item)) DecreaseQualityBy2(item);
             else DecreaseQualityBy1(item);
         }
 
