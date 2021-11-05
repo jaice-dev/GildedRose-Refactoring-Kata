@@ -15,13 +15,17 @@ namespace GildedRose
         {
             for (var i = 0; i < Items.Count; i++)
             {
+                //Extract switch to method?
                 switch (Items[i].Name)
                 {
                     case "Backstage passes to a TAFKAL80ETC concert":
-                        UpdateBackstagePass(i);
+                        UpdateBackstagePassQuality(i);
                         break;
                     case "Aged Brie":
                         IncreaseQualityBy1(i);
+                        break;
+                    case "Conjured Mana Cake":
+                        DecreaseQualityBy2(i);
                         break;
                     default:
                         DecreaseQualityBy1(i);
@@ -29,7 +33,8 @@ namespace GildedRose
                 }
                 
                 UpdateSellIn(i);
-
+                
+                //Put if inside method?
                 if (Items[i].SellIn < 0)
                 {
                     OutOfDate(i);
@@ -42,7 +47,7 @@ namespace GildedRose
             if (Items[i].Name != "Sulfuras, Hand of Ragnaros") Items[i].SellIn -= 1;
         }
 
-        private void UpdateBackstagePass(int i)
+        private void UpdateBackstagePassQuality(int i)
         {
             IncreaseQualityBy1(i);
 
@@ -58,6 +63,9 @@ namespace GildedRose
                 case "Aged Brie":
                     IncreaseQualityBy1(i);
                     break;
+                case "Conjured Mana Cake":
+                    DecreaseQualityBy2(i);
+                    break;
                 case "Backstage passes to a TAFKAL80ETC concert":
                     Items[i].Quality = 0;
                     break;
@@ -69,12 +77,20 @@ namespace GildedRose
 
         private void IncreaseQualityBy1(int i)
         {
-            if (Items[i].Quality < 50) Items[i].Quality += 1;
+            if (Items[i].Quality < 50) 
+                Items[i].Quality += 1;
         }
 
         private void DecreaseQualityBy1(int i)
         {
-            if (Items[i].Quality > 0 && Items[i].Name != "Sulfuras, Hand of Ragnaros") Items[i].Quality -= 1;
+            if (Items[i].Quality > 0 && Items[i].Name != "Sulfuras, Hand of Ragnaros") 
+                Items[i].Quality -= 1;
+        }
+        
+        private void DecreaseQualityBy2(int i)
+        {
+            if (Items[i].Quality > 2) Items[i].Quality -= 2;
+            else DecreaseQualityBy1(i);
         }
     }
 }
