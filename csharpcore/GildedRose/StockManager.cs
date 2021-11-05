@@ -1,96 +1,97 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GildedRoseKata;
 
 namespace GildedRose
 {
     public class StockManager
     {
-        IList<Item> Items;
+        public readonly IList<Item> Items;
         public StockManager(IList<Item> items)
         {
             Items = items;
         }
 
-        public void UpdateQuality()
+        public void UpdateStockForNextDay()
         {
-            for (var i = 0; i < Items.Count; i++)
+            foreach (var item in Items)
             {
-                //Extract switch to method?
-                switch (Items[i].Name)
-                {
-                    case "Backstage passes to a TAFKAL80ETC concert":
-                        UpdateBackstagePassQuality(i);
-                        break;
-                    case "Aged Brie":
-                        IncreaseQualityBy1(i);
-                        break;
-                    case "Conjured Mana Cake":
-                        DecreaseQualityBy2(i);
-                        break;
-                    default:
-                        DecreaseQualityBy1(i);
-                        break;
-                }
-                
-                UpdateSellIn(i);
-                
-                //Put if inside method?
-                if (Items[i].SellIn < 0)
-                {
-                    OutOfDate(i);
-                }
+                UpdateQuality(item);
+                UpdateSellBy(item);
+                if (IsOutOfDate(item)) UpdateQualityFurther(item);
             }
         }
 
-        private void UpdateSellIn(int i)
+        //Order of methods?
+
+        private void UpdateQuality(Item item)
         {
-            if (Items[i].Name != "Sulfuras, Hand of Ragnaros") Items[i].SellIn -= 1;
+            if (IsBackstagePass(item)) IncreaseQualityBackstagePass(item);
+            else if (IsAgedBrie(item)) IncreaseQualityBy1(item);
+            else if (IsConjured(item)) DecreaseQualityBy2();
+            else DecreaseQualityBy1(item);
         }
 
-        private void UpdateBackstagePassQuality(int i)
+        private void IncreaseQualityBackstagePass(Item item)
         {
-            IncreaseQualityBy1(i);
-
-            if (Items[i].SellIn < 11) IncreaseQualityBy1(i);
-
-            if (Items[i].SellIn < 6) IncreaseQualityBy1(i);
+            IncreaseQualityBy1(item);
+            if (item.SellIn < 11) IncreaseQualityBy1(item);
+            if (item.SellIn < 6) IncreaseQualityBy1(item);
         }
 
-        private void OutOfDate(int i)
+        private void IncreaseQualityBy1(Item item)
         {
-            switch (Items[i].Name)
-            {
-                case "Aged Brie":
-                    IncreaseQualityBy1(i);
-                    break;
-                case "Conjured Mana Cake":
-                    DecreaseQualityBy2(i);
-                    break;
-                case "Backstage passes to a TAFKAL80ETC concert":
-                    Items[i].Quality = 0;
-                    break;
-                default:
-                    DecreaseQualityBy1(i);
-                    break;
-            }
-        }
-
-        private void IncreaseQualityBy1(int i)
-        {
-            if (Items[i].Quality < 50) 
-                Items[i].Quality += 1;
-        }
-
-        private void DecreaseQualityBy1(int i)
-        {
-            if (Items[i].Quality > 0 && Items[i].Name != "Sulfuras, Hand of Ragnaros") 
-                Items[i].Quality -= 1;
+            if (item.Quality < 50) item.Quality += 1;
         }
         
-        private void DecreaseQualityBy2(int i)
+        private void DecreaseQualityBy1(Item item)
         {
-            if (Items[i].Quality > 2) Items[i].Quality -= 2;
-            else DecreaseQualityBy1(i);
+            if (item.Quality > 0 && !IsSulfuras(item)) 
+                item.Quality -= 1;
+        }
+        
+        private void DecreaseQualityBy2(Item item)
+        {
+            if (item.Quality > 2 && !IsSulfuras(item)) 
+                item.Quality -= 2;
+        }
+
+        private void UpdateSellBy(Item item)
+        {
+            if (!IsSulfuras(item)) 
+                item.SellIn -= 1;
+        }
+
+        private void UpdateQualityFurther(Item item)
+        {
+            if (IsAgedBrie(item)) IncreaseQualityBy1(item);
+            else if (IsBackstagePass(item)) item.Quality = 0;
+            else DecreaseQualityBy1(item);
+        }
+
+        public static bool IsConjured(Item item)
+        {
+            return item.Name.ToLower().Contains("conjured");
+        }
+        
+        private static bool IsOutOfDate(Item item)
+        {
+            return item.SellIn < 0;
+        }
+
+        private static bool IsBackstagePass(Item item)
+        {
+            return item.Name.ToLower().Contains("backstage pass");
+        }
+        
+        private static bool IsSulfuras(Item item)
+        {
+            return item.Name.ToLower().Contains("sulfuras, hand of ragnaros");
+        }
+        
+        private static bool IsAgedBrie(Item item)
+        {
+            return item.Name.ToLower().Contains("aged brie");
         }
     }
 }

@@ -4,32 +4,29 @@ using GildedRose;
 
 namespace GildedRoseKata
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
             Console.WriteLine("OMGHAI!");
 
-            var items = GenerateItems();
-
-            var stockManager = new StockManager(items);
+            var stockManager = new StockManager(GenerateItems());
 
             for (var day = 0; day < 31; day++)
             {
-                HandleOutput(day, items);
-                stockManager.UpdateQuality();
+                LogDay(day, stockManager.Items);
+                stockManager.UpdateStockForNextDay();
             }
         }
-
-        private static void HandleOutput(int day, IList<Item> items)
+        
+        public static void LogDay(int day, IList<Item> items)
         {
             Console.WriteLine("-------- day " + day + " --------");
             Console.WriteLine("name, sellIn, quality");
-            for (var item = 0; item < items.Count; item++)
+            foreach (var item in items)
             {
-                Console.WriteLine(items[item].Name + ", " + items[item].SellIn + ", " + items[item].Quality);
+                Console.WriteLine(item.Name + ", " + item.SellIn + ", " + item.Quality);
             }
-
             Console.WriteLine("");
         }
 
