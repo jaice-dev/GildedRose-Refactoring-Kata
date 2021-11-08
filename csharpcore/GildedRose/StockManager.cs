@@ -25,7 +25,7 @@ namespace GildedRose
         private void UpdateQuality(Item item)
         {
             if (IsBackstagePass(item)) IncreaseQualityBackstagePass(item);
-            else if (IsSulfuras(item)) ;
+            else if (IsSulfuras(item)) return;
             else if (IsAgedBrie(item)) IncreaseQualityBy1(item);
             else if (IsConjured(item)) DecreaseQualityBy(2, item);
             else DecreaseQualityBy(1, item);
@@ -57,7 +57,7 @@ namespace GildedRose
         private void HandleOutOfDateQuality(Item item)
         {
             if (IsAgedBrie(item)) IncreaseQualityBy1(item);
-            else if (IsSulfuras(item)) ;
+            else if (IsSulfuras(item)) return;
             else if (IsBackstagePass(item)) item.Quality = 0;
             else if (IsConjured(item)) DecreaseQualityBy(2, item);
             else DecreaseQualityBy(1, item);
