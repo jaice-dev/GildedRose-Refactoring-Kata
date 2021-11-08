@@ -17,16 +17,15 @@ namespace GildedRose
             foreach (var item in Items)
             {
                 UpdateQuality(item);
-                UpdateSellBy(item);
-                if (IsOutOfDate(item)) UpdateQualityFurther(item);
+                if (!IsSulfuras(item)) AgeItemByOneDay(item);
+                if (IsOutOfDate(item)) HandleOutOfDateQuality(item);
             }
         }
-
-        //Order of methods?
-
+        
         private void UpdateQuality(Item item)
         {
             if (IsBackstagePass(item)) IncreaseQualityBackstagePass(item);
+            else if (IsSulfuras(item)) ;
             else if (IsAgedBrie(item)) IncreaseQualityBy1(item);
             else if (IsConjured(item)) DecreaseQualityBy2(item);
             else DecreaseQualityBy1(item);
@@ -46,40 +45,40 @@ namespace GildedRose
         
         private void DecreaseQualityBy1(Item item)
         {
-            if (item.Quality > 0 && !IsSulfuras(item)) 
+            if (item.Quality > 0) 
                 item.Quality -= 1;
         }
         
         private void DecreaseQualityBy2(Item item)
         {
-            if (item.Quality > 2 && !IsSulfuras(item)) item.Quality -= 2;
-            else DecreaseQualityBy1(item);
+            if (item.Quality > 2) item.Quality -= 2;
+            else item.Quality = 0;
         }
 
-        private void UpdateSellBy(Item item)
+        private void AgeItemByOneDay(Item item)
         {
-            if (!IsSulfuras(item)) 
-                item.SellIn -= 1;
+            item.SellIn -= 1;
         }
 
-        private void UpdateQualityFurther(Item item)
+        private void HandleOutOfDateQuality(Item item)
         {
             if (IsAgedBrie(item)) IncreaseQualityBy1(item);
+            else if (IsSulfuras(item)) ;
             else if (IsBackstagePass(item)) item.Quality = 0;
             else if (IsConjured(item)) DecreaseQualityBy2(item);
             else DecreaseQualityBy1(item);
         }
 
+        private static bool IsOutOfDate(Item item)
+        {
+            return item.SellIn < 0;
+        }
+        
         public static bool IsConjured(Item item)
         {
             return item.Name.ToLower().Contains("conjured");
         }
         
-        private static bool IsOutOfDate(Item item)
-        {
-            return item.SellIn < 0;
-        }
-
         private static bool IsBackstagePass(Item item)
         {
             return item.Name.ToLower().Contains("backstage pass");

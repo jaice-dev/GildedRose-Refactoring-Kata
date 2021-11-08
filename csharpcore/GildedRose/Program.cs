@@ -14,12 +14,12 @@ namespace GildedRoseKata
 
             for (var day = 0; day < 31; day++)
             {
-                LogDay(day, stockManager.Items);
+                LogStock(day, stockManager.Items);
                 stockManager.UpdateStockForNextDay();
             }
         }
         
-        public static void LogDay(int day, IList<Item> items)
+        public static void LogStock(int day, IList<Item> items)
         {
             Console.WriteLine("-------- day " + day + " --------");
             Console.WriteLine("name, sellIn, quality");

@@ -41,7 +41,7 @@ namespace GildedRoseTests
         }
 
         [Fact]
-        public void Foo()
+        public void CheckItemsExistAfterOneDay()
         {
             IList<Item> items = new List<Item> { new Item { Name = "foo", SellIn = 0, Quality = 0 } };
             GildedRose.StockManager app = new GildedRose.StockManager(items);
@@ -49,7 +49,7 @@ namespace GildedRoseTests
             Assert.Equal("foo", items[0].Name);
         }
         [Fact]
-        public void CheckQualityDegradesBy1InIfInDate()
+        public void CheckQualityDegradesByOneInIfInDate()
         {
             IList<Item> items = new List<Item> { new Item { Name = "foo", SellIn = 10, Quality = 10 } };
             GildedRose.StockManager app = new GildedRose.StockManager(items);
