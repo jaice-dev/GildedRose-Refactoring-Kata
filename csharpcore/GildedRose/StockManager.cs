@@ -27,8 +27,8 @@ namespace GildedRose
             if (IsBackstagePass(item)) IncreaseQualityBackstagePass(item);
             else if (IsSulfuras(item)) return;
             else if (IsAgedBrie(item)) IncreaseQualityBy1(item);
-            else if (IsConjured(item)) DecreaseQualityBy(2, item);
-            else DecreaseQualityBy(1, item);
+            else if (IsConjured(item)) DecreaseQualityBy(2)(item);
+            else DecreaseQualityBy(1)(item);
         }
 
         private void IncreaseQualityBackstagePass(Item item)
@@ -37,18 +37,19 @@ namespace GildedRose
             if (item.SellIn < 11) IncreaseQualityBy1(item);
             if (item.SellIn < 6) IncreaseQualityBy1(item);
         }
+        
+        //make adjust quality that takes negative int
 
         private void IncreaseQualityBy1(Item item)
         {
             if (item.Quality < 50) item.Quality += 1;
         }
         
-        private void DecreaseQualityBy(int amount, Item item)
+        private static Action<Item> DecreaseQualityBy(int amount)
         {
-            item.Quality = Math.Max(item.Quality - amount, 0);
+            return item => item.Quality = Math.Max(item.Quality - amount, 0);
         }
         
-
         private void AgeItemByOneDay(Item item)
         {
             item.SellIn -= 1;
@@ -59,8 +60,8 @@ namespace GildedRose
             if (IsAgedBrie(item)) IncreaseQualityBy1(item);
             else if (IsSulfuras(item)) return;
             else if (IsBackstagePass(item)) item.Quality = 0;
-            else if (IsConjured(item)) DecreaseQualityBy(2, item);
-            else DecreaseQualityBy(1, item);
+            else if (IsConjured(item)) DecreaseQualityBy(2)(item);
+            else DecreaseQualityBy(1)(item);
         }
 
         private static bool IsOutOfDate(Item item)
