@@ -25,7 +25,7 @@ namespace GildedRoseKata
             Console.WriteLine("name, sellIn, quality");
             foreach (var item in items)
             {
-                Console.WriteLine(item.Log());
+                Console.WriteLine(item);
             }
             Console.WriteLine("");
         }

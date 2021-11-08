@@ -23,7 +23,7 @@ namespace GildedRose
             if (Item.Quality < 0) Item.Quality = 0;
         }
 
-        public string Log()
+        public override string ToString()
         {
             return Item.Name + ", " + Item.SellIn + ", " + Item.Quality;
         }
