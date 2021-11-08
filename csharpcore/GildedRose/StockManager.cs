@@ -15,6 +15,7 @@ namespace GildedRose
                 if (IsSulfuras(item)) return new Sulfuras(item);
                 if (IsAgedBrie(item)) return new AgedBrie(item);
                 if (IsBackstagePass(item)) return new Backstage(item);
+                if (IsConjured(item)) return new Conjured(item);
                 return new NormalItem(item);
             }).ToList();
         }

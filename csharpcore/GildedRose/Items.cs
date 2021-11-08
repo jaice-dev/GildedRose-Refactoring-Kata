@@ -15,11 +15,12 @@ namespace GildedRose
             Item.SellIn -= 1;
             Item.Quality -= 1;
             if (Item.SellIn < 0) Item.Quality -= 1;
-            LimitMinimumQuality();
+            LimitMinAndMaxQuality();
         }
 
-        public void LimitMinimumQuality()
+        public void LimitMinAndMaxQuality()
         {
+            if (Item.Quality > 50) Item.Quality = 50;
             if (Item.Quality < 0) Item.Quality = 0;
         }
 
@@ -47,10 +48,8 @@ namespace GildedRose
             Item.SellIn -= 1;
             Item.Quality += 1;
             if (Item.SellIn < 0) Item.Quality += 1;
-            if (Item.Quality > 50) Item.Quality = 50;
-            LimitMinimumQuality();
+            LimitMinAndMaxQuality();
         }
-        
     }
 
     public class Backstage : ItemWrapper
@@ -71,8 +70,7 @@ namespace GildedRose
             Item.Quality += 1;
             if (Item.SellIn < 10) Item.Quality += 1;
             if (Item.SellIn < 5) Item.Quality += 1;
-            if (Item.Quality > 50) Item.Quality = 50;
-            LimitMinimumQuality();
+            LimitMinAndMaxQuality();
         }
         
     }
@@ -85,6 +83,21 @@ namespace GildedRose
         
         public override void Update()
         {
+        }
+    }
+    
+    public class Conjured : ItemWrapper
+    {
+        public Conjured(Item item) : base(item)
+        {
+        }
+        
+        public override void Update()
+        {
+            Item.SellIn -= 1;
+            Item.Quality -= 2;
+            if (Item.SellIn < 0) Item.Quality -= 2;
+            LimitMinAndMaxQuality();
         }
     }
 }
