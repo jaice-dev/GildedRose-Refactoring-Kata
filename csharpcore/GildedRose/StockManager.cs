@@ -27,8 +27,8 @@ namespace GildedRose
             if (IsBackstagePass(item)) IncreaseQualityBackstagePass(item);
             else if (IsSulfuras(item)) ;
             else if (IsAgedBrie(item)) IncreaseQualityBy1(item);
-            else if (IsConjured(item)) DecreaseQualityBy2(item);
-            else DecreaseQualityBy1(item);
+            else if (IsConjured(item)) DecreaseQualityBy(2, item);
+            else DecreaseQualityBy(1, item);
         }
 
         private void IncreaseQualityBackstagePass(Item item)
@@ -43,17 +43,11 @@ namespace GildedRose
             if (item.Quality < 50) item.Quality += 1;
         }
         
-        private void DecreaseQualityBy1(Item item)
+        private void DecreaseQualityBy(int amount, Item item)
         {
-            if (item.Quality > 0) 
-                item.Quality -= 1;
+            item.Quality = Math.Max(item.Quality - amount, 0);
         }
         
-        private void DecreaseQualityBy2(Item item)
-        {
-            if (item.Quality > 2) item.Quality -= 2;
-            else item.Quality = 0;
-        }
 
         private void AgeItemByOneDay(Item item)
         {
@@ -65,8 +59,8 @@ namespace GildedRose
             if (IsAgedBrie(item)) IncreaseQualityBy1(item);
             else if (IsSulfuras(item)) ;
             else if (IsBackstagePass(item)) item.Quality = 0;
-            else if (IsConjured(item)) DecreaseQualityBy2(item);
-            else DecreaseQualityBy1(item);
+            else if (IsConjured(item)) DecreaseQualityBy(2, item);
+            else DecreaseQualityBy(1, item);
         }
 
         private static bool IsOutOfDate(Item item)
