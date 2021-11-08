@@ -47,6 +47,7 @@ namespace GildedRose
             Item.SellIn -= 1;
             Item.Quality += 1;
             if (Item.SellIn < 0) Item.Quality += 1;
+            if (Item.Quality > 50) Item.Quality = 50;
             LimitMinimumQuality();
         }
         
@@ -66,10 +67,11 @@ namespace GildedRose
                 Item.Quality = 0;
                 return;
             }
-
+            
             Item.Quality += 1;
             if (Item.SellIn < 10) Item.Quality += 1;
             if (Item.SellIn < 5) Item.Quality += 1;
+            if (Item.Quality > 50) Item.Quality = 50;
             LimitMinimumQuality();
         }
         
