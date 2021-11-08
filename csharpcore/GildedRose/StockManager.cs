@@ -1,79 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GildedRoseKata;
 
 namespace GildedRose
 {
     public class StockManager
     {
-        public readonly IList<Item> Items;
-        public StockManager(IList<Item> items)
+        public readonly IList<ItemWrapper> Items;
+        public StockManager(IEnumerable<Item> items)
         {
-            Items = items;
+            Items = items.Select<Item, ItemWrapper>(item =>
+            {
+                if (IsSulfuras(item)) return new Sulfuras(item);
+                if (IsAgedBrie(item)) return new AgedBrie(item);
+                if (IsBackstagePass(item)) return new Backstage(item);
+                return new NormalItem(item);
+            }).ToList();
         }
 
         public void UpdateStockForNextDay()
         {
             foreach (var item in Items)
             {
-                UpdateQuality(item);
-                if (!IsSulfuras(item)) AgeItemByOneDay(item);
-                if (IsOutOfDate(item)) HandleOutOfDateQuality(item);
+                item.Update();
             }
         }
-        
-        private void UpdateQuality(Item item)
-        {
-            if (IsBackstagePass(item)) IncreaseQualityBackstagePass(item);
-            else if (IsSulfuras(item)) ;
-            else if (IsAgedBrie(item)) IncreaseQualityBy1(item);
-            else if (IsConjured(item)) DecreaseQualityBy2(item);
-            else DecreaseQualityBy1(item);
-        }
 
-        private void IncreaseQualityBackstagePass(Item item)
-        {
-            IncreaseQualityBy1(item);
-            if (item.SellIn < 11) IncreaseQualityBy1(item);
-            if (item.SellIn < 6) IncreaseQualityBy1(item);
-        }
-
-        private void IncreaseQualityBy1(Item item)
-        {
-            if (item.Quality < 50) item.Quality += 1;
-        }
-        
-        private void DecreaseQualityBy1(Item item)
-        {
-            if (item.Quality > 0) 
-                item.Quality -= 1;
-        }
-        
-        private void DecreaseQualityBy2(Item item)
-        {
-            if (item.Quality > 2) item.Quality -= 2;
-            else item.Quality = 0;
-        }
-
-        private void AgeItemByOneDay(Item item)
-        {
-            item.SellIn -= 1;
-        }
-
-        private void HandleOutOfDateQuality(Item item)
-        {
-            if (IsAgedBrie(item)) IncreaseQualityBy1(item);
-            else if (IsSulfuras(item)) ;
-            else if (IsBackstagePass(item)) item.Quality = 0;
-            else if (IsConjured(item)) DecreaseQualityBy2(item);
-            else DecreaseQualityBy1(item);
-        }
-
-        private static bool IsOutOfDate(Item item)
-        {
-            return item.SellIn < 0;
-        }
-        
         public static bool IsConjured(Item item)
         {
             return item.Name.ToLower().Contains("conjured");

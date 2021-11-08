@@ -2,59 +2,86 @@
 
 namespace GildedRose
 {
-    public class Normal : Item
+    public class ItemWrapper
     {
-        public void Update()
+        public Item Item;
+        public ItemWrapper(Item item)
         {
-            SellIn -= 1;
-            Quality -= 1;
-            if (SellIn < 0) Quality -= 1;
+            Item = item;
+        }
+        
+        public virtual void Update()
+        {
+            Item.SellIn -= 1;
+            Item.Quality -= 1;
+            if (Item.SellIn < 0) Item.Quality -= 1;
             LimitMinimumQuality();
         }
 
         public void LimitMinimumQuality()
         {
-            if (Quality < 0) Quality = 0;
+            if (Item.Quality < 0) Item.Quality = 0;
         }
 
         public string Log()
         {
-            return Name + ", " + SellIn + ", " + Quality;
+            return Item.Name + ", " + Item.SellIn + ", " + Item.Quality;
         }
     }
 
-    public class AgedBrie : Normal
+    public class NormalItem : ItemWrapper
     {
-        public new void Update()
+        public NormalItem(Item item) : base(item)
         {
-            SellIn -= 1;
-            Quality += 1;
-            if (SellIn < 0) Quality += 1;
+        }
+    }
+
+    public class AgedBrie : ItemWrapper
+    {       
+        public AgedBrie(Item item) : base(item)
+        {
+        }
+
+        public override void Update()
+        {
+            Item.SellIn -= 1;
+            Item.Quality += 1;
+            if (Item.SellIn < 0) Item.Quality += 1;
             LimitMinimumQuality();
         }
+        
     }
 
-    public class Backstage : Normal
+    public class Backstage : ItemWrapper
     {
-        public new void Update()
+        public Backstage(Item item) : base(item)
         {
-            SellIn -= 1;
-            if (SellIn < 0)
+        }
+        
+        public override void Update()
+        {
+            Item.SellIn -= 1;
+            if (Item.SellIn < 0)
             {
-                Quality = 0;
+                Item.Quality = 0;
                 return;
             }
 
-            Quality += 1;
-            if (SellIn < 10) Quality += 1;
-            if (SellIn < 5) Quality += 1;
+            Item.Quality += 1;
+            if (Item.SellIn < 10) Item.Quality += 1;
+            if (Item.SellIn < 5) Item.Quality += 1;
             LimitMinimumQuality();
         }
+        
     }
 
-    public class Sulfuras : Normal
+    public class Sulfuras : ItemWrapper
     {
-        public new void Update()
+        public Sulfuras(Item item) : base(item)
+        {
+        }
+        
+        public override void Update()
         {
         }
     }

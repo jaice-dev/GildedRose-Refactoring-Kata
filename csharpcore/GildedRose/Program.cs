@@ -19,13 +19,13 @@ namespace GildedRoseKata
             }
         }
         
-        public static void LogStock(int day, IList<Item> items)
+        public static void LogStock(int day, IList<ItemWrapper> items)
         {
             Console.WriteLine("-------- day " + day + " --------");
             Console.WriteLine("name, sellIn, quality");
             foreach (var item in items)
             {
-                Console.WriteLine(item.Name + ", " + item.SellIn + ", " + item.Quality);
+                Console.WriteLine(item.Log());
             }
             Console.WriteLine("");
         }
